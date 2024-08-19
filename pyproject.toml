@@ -3,10 +3,10 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "mdfe"
+name = "unifex"
 version = "0.0.1"
 authors = [{ name="Morris Florek", email="morris.benedikt.florek@uni-weimar.de" },]
-description = "A library for training multi-domain image embedding models."
+description = "A library for training universal image embedding models."
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
