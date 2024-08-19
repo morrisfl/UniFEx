@@ -1,7 +1,7 @@
 # Efficient and Discriminative Image Feature Extraction for Universal Image Retrieval
 
 This repository contains the code associated with the publication "Efficient and Discriminative Image Feature Extraction 
-for Universal Image Retrieval," which was accepted for presentation at this year's [DAGMA German Conference on Pattern 
+for Universal Image Retrieval", which was accepted for presentation at this year's [DAGMA German Conference on Pattern 
 Recognition (GCPR)](https://www.gcpr-vmv.de/year/2024).
 
 ### Abstract
