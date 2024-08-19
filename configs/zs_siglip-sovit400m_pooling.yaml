@@ -1,0 +1,17 @@
+MODEL:
+  name: "siglip-sovit400m_pooling"
+  embedding_dim: 64
+  cloud_upload: True
+  BACKBONE:
+    output_dim: 1152
+    freeze_backbone: True
+    type: "siglip"
+    network_arch: "sovit400m"
+    model_name: "vit_so400m_patch14_siglip_384"
+    weights: ""
+    proj_layer: False
+  NECK:
+    neck_type: "pooling"
+
+TRANSFORM:
+  size: 384

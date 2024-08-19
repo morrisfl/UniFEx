@@ -1,0 +1,60 @@
+MODEL:
+  name: "siglip-sovit400m_arcface3_m4d-35k"
+  embedding_dim: 64
+  cloud_upload: True
+  BACKBONE:
+    output_dim: 1152
+    freeze_backbone: True
+    type: "siglip"
+    network_arch: "sovit400m"
+    model_name: "vit_so400m_patch14_siglip_384"
+    weights: ""
+    proj_layer: False
+  NECK:
+    neck_type: "proj_layer"
+    dropout: 0.2
+  HEAD:
+    name: "ArcFace"
+    k: 3
+    s: 30.0
+    dynamic_s: False
+    m: 0.5
+    m_max: 0.0
+    m_min: 0.0
+    h: 0.0
+    t_alpha: 0.0
+
+DATASET:
+  names: ["m4d-35k"]
+  cls_dist_file: ""
+
+DATALOADER:
+  batch_size: 128
+  num_workers: 8
+
+TRANSFORM:
+  name: "openai-clip"
+  size: 384
+
+TRAIN:
+  epoch_based: True
+  epochs: 10
+  iterations: 0
+  save_epoch: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  save_iter: 0
+
+LOSS:
+  name: "CrossEntropyLoss"
+
+OPTIMIZER:
+  name: "Adam"
+  lr: 2e-2
+  weight_decay: 1e-4
+  momentum: 0.0
+
+SCHEDULER:
+  epoch_based: False
+  name: "cosine"
+  warmup: "linear"
+  warmup_steps: 1
+  min_lr: 1e-3

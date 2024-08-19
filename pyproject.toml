@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mdfe"
+version = "0.0.1"
+authors = [{ name="Morris Florek", email="morris.benedikt.florek@uni-weimar.de" },]
+description = "A library for training multi-domain image embedding models."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "google-api-python-client",
+    "google-auth-httplib2",
+    "google-auth-oauthlib",
+    "matplotlib",
+    "numpy",
+    "open_clip_torch",
+    "pandas",
+    "pytorch-warmup",
+    "timm",
+    "tqdm",
+    "yacs",
+]
