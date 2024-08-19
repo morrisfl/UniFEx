@@ -1,45 +1,26 @@
-# MDFE - Multi-Domain Feature Extraction
+# Efficient and Discriminative Image Feature Extraction for Universal Image Retrieval
 
-![model overview](readme/model_overview.svg)
-
-**Figure 1:** *Overview of the proposed multi-domain image embedding model. The model consists of a visual-semantic foundation
-model as backbone with an attached projection layer. The model was trained on a custom curated multi-domain training dataset (M4D-35k), 
-using a margin-based softmax loss.*
-
-This repository is related to the research conducted for my master thesis entitled "**Efficient and Discriminative Image 
-Feature Extraction for Multi-Domain Image Retrieval**". An executive summery of the thesis can be found [here](readme/executive_summary.pdf). 
-For those interested in a comprehensive review of the entire work, please feel free to contact me to obtain a copy of the 
-full thesis report.
+This repository contains the code associated with the publication "Efficient and Discriminative Image Feature Extraction 
+for Universal Image Retrieval," which was accepted for presentation at this year's [DAGMA German Conference on Pattern 
+Recognition (GCPR)](https://www.gcpr-vmv.de/year/2024).
 
 ### Abstract
-The prevalence of image capture devices has led to the growth of digital image collections, requiring advanced retrieval systems. 
-Current methods are often limited by their domain specificity, struggle with out-of-domain images, and lack of generalization. 
-This study addresses these limitations by focusing on multi-domain feature extraction. The goal entails in developing an 
-efficient multi-domain image encoder for fine-grained retrieval while overcoming computational constraints. Therefore, a 
-multi-domain training dataset, called *M4D-35k*, was curated, allowing for resource-efficient training. Dataset 
-curation involved selecting from 15 datasets and optimizing their overall size in terms of samples and classes used. 
-Additionally, the effectiveness of various visual-semantic foundation models and margin-based softmax loss were evaluated 
-to assess their suitability for multi-domain feature extraction. Among the loss functions investigated, a proprietary approach 
-was developed that refers to *CLAM* (**cl**ass distribution aware additive **a**ngular **m**argin loss). Even with computational 
-limitations, a close to SOTA result was achieved on the [Google Universal Image Embedding Challenge](https://www.kaggle.com/competitions/google-universal-image-embedding) 
-(GUIEC) evaluation dataset. Linear probing of the embedding model alone resulted in a mMP@5 score of 0.722. The total 
-number of model parameters and the number of trainable parameters were reduced by 32% and 289 times, respectively. Despite 
-the smaller model and without end-to-end fine-tuning, it trailed the GUIEC leaderboard by only 0.8%, surpassing 2nd place 
-and closely behind 1st. It also outperformed the top-ranked method with similar computational prerequisites by 3.6%.
+Current image retrieval systems often face domain specificity and generalization issues. This study aims to overcome these 
+limitations by developing a computationally efficient training framework for a universal feature extractor that provides 
+strong semantic image representations across various domains. To this end, we curated a multi-domain training dataset, called 
+*M4D-35k*, which allows for resource-efficient training. Additionally, we conduct an extensive evaluation and comparison 
+of various state-of-the-art visual-semantic foundation models and margin-based metric learning loss functions regarding 
+their suitability for efficient universal feature extraction. Despite constrained computational resources, we achieve near 
+state-of-the-art results on the [Google Universal Image Embedding Challenge (GUIEC)](https://www.kaggle.com/competitions/google-universal-image-embedding), 
+with a *mMP@5* of 0.721. This places our method at the second rank on the leaderboard, just 0.7 percentage points behind 
+the best performing method. However, our model has 32% fewer overall parameters and 289 times fewer trainable parameters. 
+Compared to methods with similar computational requirements, we outperform the previous state of the art by 3.3 percentage 
+points.
 
-### Results
-|                                              GUIEC rank                                              | Method         | # total model params | # trainable params | mMP@5 |
-|:----------------------------------------------------------------------------------------------------:|----------------|:--------------------:|:------------------:|:-----:|
-| [1st place](https://www.kaggle.com/competitions/google-universal-image-embedding/discussion/359316)  | fine-tuning    |         661M         |        661M        | 0.730 |
-| [2nd place](https://www.kaggle.com/competitions/google-universal-image-embedding/discussion/359525)  | fine-tuning    |         667M         |        667M        | 0.711 |
-| [5th place](https://www.kaggle.com/competitions/google-universal-image-embedding/discussion/359161)  | linear probing |         633M         |        1.1M        | 0.686 |
-| [10th place](https://www.kaggle.com/competitions/google-universal-image-embedding/discussion/359271) | linear probing |        1,045M        |       22.0M        | 0.675 |
-|                                             Own approach                                             | linear probing |         431M         |        2.3M        | 0.722 |
-
-**Table:** *Comparison of the proposed approach with the top-ranked methods on the GUIEC evaluation dataset. It improves 
-the total model parameters at inference by 32% compared to the leanest approach (5th place), reduces the number of trainable 
-parameters by 289x compared to the fine-tuning approaches (1st and 2nd place), and achieves a performance close to SOTA, 
-surpassing 2nd place and just behind 1st place.*
+![Figure 1](readme/contribution.png)
+**Figure 1:** Results on the GUIEC test set. Comparing our approach to the GUIEC leaderboard by plotting the evaluation 
+metric *mMP@5* over the number of total model parameters. The bubble’s area is proportional to the number of trainable 
+model parameters.
 
 ## Table of Contents
 - [I. Setup](#i-setup)
@@ -54,23 +35,23 @@ Here, we describe a step-by-step guide to setup and install dependencies on a UN
 
 #### 1. Create a virtual environment
 ```
-conda create -n env_mdfe python=3.8
-conda activate env_mdfe
+conda create -n env_unifex python=3.8
+conda activate env_unifex
 ```
 #### 2. Clone the repository
 ```
-git clone git@github.com:morrisfl/mdfe.git
+git clone git@github.com:morrisfl/UniFEx.git
 ```
 #### 3. Install pytorch
 Depending on your system and compute requirements, you may need to change the command below. See [pytorch.org](https://pytorch.org/get-started/locally/) 
-for more details. In order to submit the embedding models to the 2022 [Google Universal Image Embedding Challenge](https://www.kaggle.com/competitions/google-universal-image-embedding), 
+for more details. In order to submit the embedding models to the 2022 [GUIEC](https://www.kaggle.com/competitions/google-universal-image-embedding), 
 PyTorch 1.11.0 is required.
 ```
 conda install pytorch==1.11.0 torchvision==0.12.0 cudatoolkit=11.3 -c pytorch
 ```
 #### 4. Install the repository with all dependencies
 ```
-cd mdfe
+cd UniFEx
 python -m pip install .
 ```
 If you want to make changes to the code, you can install the repository in editable mode:
@@ -111,8 +92,12 @@ about the dataset and directory structure can be found [here](src/datasets/DATAS
 To use *M4D-35k* for training, add `m4d_35k` to the `DATASET.names` parameter in the configuration file in `configs/`.
 
 ## III. Embedding Model
-The architecture of the image embedding model is illustrated in Figure 1. The model consists of a visual-semantic foundation
-model as backbone with an attached projection layer. Different foundation models can be used, as shown in the table below.
+![Figure 1](readme/model_architecture.png)
+**Figure 2:** Overview of the model architecture. The image embedding model consists of a visual-semantic foundation model
+as backbone, followed by a projection head. During training the model is optimized using a margin-based metric learning
+loss function.
+
+Different foundation models can be used, as shown in the table below.
 
 |                          Foundation Model                          | Encoder architecture |     `type`      |                         `model_name`                         |                         `weights`                          |
 |:------------------------------------------------------------------:|:--------------------:|:---------------:|:------------------------------------------------------------:|:----------------------------------------------------------:|
@@ -132,10 +117,10 @@ configuration file:
 - `MODEL.BACKBONE.model_name`: the name of the visual-semantic foundation model, specified by OpenCLIP or timm.
 - `MODEL.BACKBONE.weights`: the weights of the visual-semantic foundation model, only required for OpenCLIP models (corresponds to the pretrained parameter in [OpenCLIP](https://github.com/mlfoundations/open_clip)).
 - `MODEL.NECK.type`: the type to reduce the embedding dimension to the specified `MODEL.embedding_dim`, supported types are `proj_layer` and `pooling`.
-- `MODEL.HEAD.name`: the name of the margin-based softmax loss, supported names are `ArcFace`, `DynM-ArcFace`, `AdaCos`, `LiArcFace`, `CurricularFace`, and `AdaFace`.
-- `MODEL.HEAD.k`: the number of centers for the margin-based softmax loss.
-- `MODEL.HEAD.s`: the scaling factor for the margin-based softmax loss.
-- `MODEL.HEAD.m`: the margin for the margin-based softmax loss.
+- `MODEL.HEAD.name`: the name of the margin-based metric learning loss, supported names are `ArcFace`, `DynM-ArcFace`, `AdaCos`, `LiArcFace`, `CurricularFace`, and `AdaFace`.
+- `MODEL.HEAD.k`: the number of centers for the margin-based metric learning loss.
+- `MODEL.HEAD.s`: the scaling factor for the margin-based metric learning loss.
+- `MODEL.HEAD.m`: the margin for the margin-based metric learning loss.
 
 Further explanations of changeable parameters can be found in the [default_cfg.py](src/utils/default_cfg.py).
 
